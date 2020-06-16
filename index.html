@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0">
+  <title>ScoreBoard Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha256-OFRAJNoaD8L3Br5lglV7VyLRf0itmoBzWUoM+Sji4/8=" crossorigin="anonymous"></script>
+</head>
+<style>
+pre {
+  margin: 0;
+  overflow: scroll;
+  /*word-wrap: normal;*/
+  white-space: pre;
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+pre code {
+  display: inline;
+  /*max-width: auto;*/
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  /*word-wrap: normal;*/
+  background-color: initial;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+}
+th {
+  min-width: 85px;
+}
+tr > th:nth-child(1) {
+  min-width: 35px;
+}
+tr > th:nth-child(2) {
+  min-width: 225px;
+}
+</style>
+<body>
+  <div class="container my-5">
+    <h1>ScoreBoard Generator</h1>
+    <hr>
+    <h2>Step 1.</h2>
+    <p>新增Google試算表，並依照以下格式填入試算表資料</p>
+    <p class="text-danger">註：A1的"DESC"請照打</p>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">A</th>
+            <th scope="col">B</th>
+            <th scope="col">C</th>
+            <th scope="col">D</th>
+            <th scope="col">E</th>
+            <th scope="col">...</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>DESC</td>
+            <td>學號</td>
+            <td>Quiz 1</td>
+            <td>Quiz 2</td>
+            <td>Exam 1</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>成績單大標題 <br class="d-block d-sm-none">ex: DM20s ScoreBoard</td>
+            <td>0856525</td>
+            <td>100</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>成績單註釋 ex: L = On leave</td>
+            <td>08565XX</td>
+            <td>100</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <hr>
+    <h2>Step 2.</h2>
+    <p>點選"檔案">"發佈到網路"</p>
+    <p>設定發布為CSV，如下圖所示：</p>
+    <img class="img-fluid" src="image.png" alt="">
+    <hr>
+    <h2>Step 3.</h2>
+    <p>在網址列複製你的試算表<span class="text-primary">id</span>和<span class="text-success">gid</span></p>
+    <pre><code>https://docs.google.com/spreadsheets/d/e/<span class="text-primary">xxxxxxxxxxxxxxxxxxxxxxxxxx</span>/pub?gid=<span class="text-success">xxxxxxxxx</span>&single=true&output=csv</code></pre>
+    <hr>
+    <h2>Step 4.</h2>
+    <p>貼上id和gid產生HTML檔</p>
+    <form class="form-inline">
+      <label class="sr-only" for="sheet-id">id</label>
+      <input type="text" class="form-control mb-2 mr-sm-2" id="sheet-id" placeholder="ID">
+      <label class="sr-only" for="sheet-gid">gid</label>
+      <input type="text" class="form-control mb-2 mr-sm-2" id="sheet-gid" placeholder="GID">
+      <button type="submit" class="btn btn-primary mb-2">產生HTML</button>
+    </form>
+    <hr>
+    <h2>Step 5.</h2>
+    <p>將產生之HTML發布至github page.</p>
+  </div>
+</body>
+<script>
+  jQuery(document).ready(function($) {
+    $('button').on('click', function(event) {
+      event.preventDefault();
+      /* Act on the event */
+      let id = $('#sheet-id').val();
+      let gid = $('#sheet-gid').val();
+      let template = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Score Board</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha256-L/W5Wfqfa0sdBNIKN9cG6QA5F2qx4qICmU2VgLruv9Y=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.min.js" integrity="sha256-Fh801SO9gqegfUdkDxyzXzIUPWzO/Vatqj8uN+5xcL4=" crossorigin="anonymous"><\/script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"><\/script>
+</head>
+<!-- ScoreBoard generated by Albert albert.cs08g@nctu.edu.tw  -->
+<body>
+  <div class="container pt-5">
+    <h1 id='title'></h1>
+    <p id='desc'></p>
+    <table class="table table-striped table-bordered table-responsive-lg">
+      <thead id="table-header"></thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+  
+</body>
+<script type="text/javascript">
+Papa.parse("https://docs.google.com/spreadsheets/d/e/${id}/pub?gid=${gid}&single=true&output=csv", {
+  download: true,
+  header: true,
+  complete: function(results) {
+    $('#title').html(results.data[0].DESC);
+    $('#desc').html(results.data[1].DESC);
+    var tableHeader = '<tr>';
+    for(key in results.data[0]) {
+      if (key == 'DESC') {
+        continue;
+      }
+      tableHeader += '<th>'+key+'</th>';
+    }
+    tableHeader += '</tr>';
+    $('#table-header').append($(tableHeader));
+    results.data.forEach(element => {
+      var tr = '<tr>';
+      for(key in element) {
+        if (key == 'DESC') {
+          continue;
+        }
+        tr += '<td>'+element[key]+'</td>';
+      }
+      tr += '</tr>';
+      $('#table-body').append($(tr));
+    });
+  }
+});
+<\/script>
+</html>`
+    let file = new Blob([template], {type: 'text/html'});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+      window.navigator.msSaveOrOpenBlob(file, 'index.html');
+    else { // Others
+      let a = document.createElement("a"), url = URL.createObjectURL(file);
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);  
+      }, 0); 
+    }
+    });
+  });
+</script>
+</html>
